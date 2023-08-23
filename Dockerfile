@@ -48,7 +48,10 @@ RUN nvim -c 'MasonInstall --force buildifier cbfmt clangd clang-format codelldb 
 WORKDIR /zoox
 CMD sleep infinity
 
-
+# Build with
+# docker build -t neovim .
+# List containers
+# docker image ls
 # Run this Dockerfile with
-# $ docker run --rm -it -v /home/astanleyjones/zoox:/zoox -v $HOME/.config:/root/.config -v $HOME:$HOME
+# $ docker run -it -v /home/astanleyjones/zoox:/zoox -v $HOME/.config:/root/.config -v $HOME:$HOME <image>
 # $ nvim
