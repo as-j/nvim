@@ -32,12 +32,11 @@ RUN update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
 RUN update-alternatives --config editor
 
 RUN git clone --depth 1 https://github.com/as-j/nvim.git ~/.config/nvim
-RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 RUN git config --global --add safe.directory /zoox/driving-emu-com-stale
 RUN git config --global --add safe.directory /zoox/driving
 
-# removed --headless for testing
-RUN nvim -c 'autocmd User PackerComplete quitall' -c PackerSync
+# This works since the config files for vim auto install packer and then auto run packer.sync
+RUN nvim -u ~/.config/nvim/lua/plugins.lua -c 'autocmd User PackerComplete quitall'
 RUN nvim -c 'MasonInstall --force buildifier cbfmt clangd clang-format codelldb cpplint cpptools pyright python-lsp-server' -c 'quitall'
 # My configuration
 #RUN git clone --depth 1 \
