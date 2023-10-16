@@ -1,3 +1,6 @@
+-- make the linter be quiet
+local vim = vim
+
 -- Mason Setup
 require("mason").setup({
     ui = {
@@ -73,8 +76,19 @@ require'neogit'.setup{
     console_timeout = 6000
 }
 
-require'lspconfig'.clangd.setup{}
-require'lspconfig'.pylsp.setup{}
+
+local lspconfig = require'lspconfig'
+lspconfig.clangd.setup{
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
+}
+require('mason-lspconfig').setup_handlers({
+  function(server)
+    if server == "clangd" then return end
+    lspconfig[server].setup({})
+  end,
+})
+
+--require'lspconfig'.pylsp.setup{}
 --require'lspconfig'.bzl.setup{}
 
 --require'lspconfig'.pyright.setup{}
@@ -189,4 +203,6 @@ function _G.ReloadConfig()
   vim.notify("Nvim configuration reloaded!", vim.log.levels.INFO)
 end
 
-
+vim.keymap.set('n', '<space>n', function() vim.cmd "noh" end)
+vim.keymap.set('n', '<C-n>', function() vim.cmd "cnext" end)
+vim.keymap.set('n', '<C-p>', function() vim.cmd "cprev" end)

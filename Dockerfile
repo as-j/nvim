@@ -14,6 +14,7 @@ RUN pip3 install pynvim
 # Node dependencies + neovim
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt install -y nodejs npm unzip python3-venv ripgrep fd-find locales exuberant-ctags clangd
+RUN npm install -g eslint
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
@@ -34,6 +35,8 @@ RUN update-alternatives --config editor
 RUN git clone --depth 1 https://github.com/as-j/nvim.git ~/.config/nvim
 RUN git config --global --add safe.directory /zoox/driving-emu-com-stale
 RUN git config --global --add safe.directory /zoox/driving
+
+COPY --from=JohnnyMorganz/StyLua:0.18.0 /stylua /usr/bin/stylua
 
 # This works since the config files for vim auto install packer and then auto run packer.sync
 RUN nvim -u ~/.config/nvim/lua/plugins.lua -c 'autocmd User PackerComplete quitall'
