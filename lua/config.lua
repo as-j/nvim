@@ -15,6 +15,36 @@ require("mason-lspconfig").setup{
     ensure_installed = { "lua_ls", "rust_analyzer", "bashls", "clangd", "dockerls","jsonls" },
 }
 
+require("mason-lspconfig").setup_handlers {
+    -- The first entry (without a key) will be the default handler
+    -- and will be called for each installed server that doesn't have
+    -- a dedicated handler.
+    function (server_name) -- default handler (optional)
+        require("lspconfig")[server_name].setup {}
+    end,
+    -- Next, you can provide a dedicated handler for specific servers.
+    -- For example, a handler override for the `rust_analyzer`:
+    ["clangd"] = function ()
+        require("lspconfig")["clangd"].setup {
+            requirefiletypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+        }
+    end,
+    ["pylsp"] = function()
+        require("lspconfig")["pylsp"].setup {
+            settings = {
+                pylsp = {
+                    plugins = {
+                        pycodestyle = {
+                            ignore = {'W391'},
+                            maxLineLength = 120
+                        }
+                    }
+                }
+            }
+        }
+    end,
+}
+
 -- Treesitter Plugin Setup
 require('nvim-treesitter.configs').setup {
   ensure_installed = { "lua", "rust", "toml", "python", "cpp" },
@@ -75,18 +105,6 @@ vim.opt.listchars = {
 require'neogit'.setup{
     console_timeout = 6000
 }
-
-
-local lspconfig = require'lspconfig'
-lspconfig.clangd.setup{
-    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
-}
-require('mason-lspconfig').setup_handlers({
-  function(server)
-    if server == "clangd" then return end
-    lspconfig[server].setup({})
-  end,
-})
 
 --require'lspconfig'.pylsp.setup{}
 --require'lspconfig'.bzl.setup{}
@@ -203,6 +221,6 @@ function _G.ReloadConfig()
   vim.notify("Nvim configuration reloaded!", vim.log.levels.INFO)
 end
 
-vim.keymap.set('n', '<space>n', function() vim.cmd "noh" end)
+--vim.keymap.set('n', '<space>n', function() vim.cmd "noh" end)
 vim.keymap.set('n', '<C-n>', function() vim.cmd "cnext" end)
 vim.keymap.set('n', '<C-p>', function() vim.cmd "cprev" end)
