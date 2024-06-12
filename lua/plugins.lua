@@ -42,7 +42,7 @@ return require('packer').startup(function(use)
     use 'hrsh7th/cmp-buffer'
     use 'hrsh7th/vim-vsnip'
 
-    use 'nvim-treesitter/nvim-treesitter'
+    use { 'nvim-treesitter/nvim-treesitter', tag = 'v0.9.2'}
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.2',
@@ -70,5 +70,12 @@ return require('packer').startup(function(use)
     end
 
     use 'skywind3000/asyncrun.vim'
+
+    -- Install telescope file browswer
+    use {
+        "nvim-telescope/telescope-file-browser.nvim",
+        requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    }
+
 
 end)
